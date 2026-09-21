@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="#08111F">
+
+    <!-- Верхняя часть -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ШЕЯ 5"
+                android:textColor="#F5F9FF"
+                android:textSize="30sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="зарядка для шеи и плеч"
+                android:textColor="#91A6C0"
+                android:textSize="14sp"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/settingsButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:text="⚙"
+            android:textColor="#F5F9FF"
+            android:textSize="25sp"/>
+    </LinearLayout>
+
+
+    <!-- Заголовок -->
+
+    <TextView
+        android:id="@+id/menuTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:text="Спокойно. Плавно. Каждый день."
+        android:textColor="#F5F9FF"
+        android:textSize="21sp"
+        android:textStyle="bold"/>
+
+
+    <!-- Карточка с человеком -->
+
+    <FrameLayout
+        android:id="@+id/personCard"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="14dp"
+        android:background="#102038">
+
+        <com.example.sheya5.PersonView
+            android:id="@+id/personView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </FrameLayout>
+
+
+    <!-- Название упражнения -->
+
+    <TextView
+        android:id="@+id/exerciseName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:gravity="center"
+        android:text="Готовы?"
+        android:textColor="#F5F9FF"
+        android:textSize="19sp"
+        android:textStyle="bold"/>
+
+
+    <!-- Таймер -->
+
+    <TextView
+        android:id="@+id/timerText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="05:00"
+        android:textColor="#55B7FF"
+        android:textSize="46sp"
+        android:textStyle="bold"/>
+
+
+    <!-- Обратный отсчёт -->
+
+    <TextView
+        android:id="@+id/countdownText"
+        android:layout_width="match_parent"
+        android:layout_height="28dp"
+        android:gravity="center"
+        android:text=""
+        android:textColor="#F5F9FF"
+        android:textSize="18sp"
+        android:textStyle="bold"/>
+
+
+    <!-- Выбор длительности -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/min4"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_margin="3dp"
+            android:gravity="center"
+            android:text="4"
+            android:textColor="#F5F9FF"
+            android:textSize="14sp"
+            android:background="#152640"/>
+
+        <TextView
+            android:id="@+id/min5"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_margin="3dp"
+            android:gravity="center"
+            android:text="5"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:background="#55B7FF"/>
+
+        <TextView
+            android:id="@+id/min6"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_margin="3dp"
+            android:gravity="center"
+            android:text="6"
+            android:textColor="#F5F9FF"
+            android:textSize="14sp"
+            android:background="#152640"/>
+
+        <TextView
+            android:id="@+id/min8"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_margin="3dp"
+            android:gravity="center"
+            android:text="8"
+            android:textColor="#F5F9FF"
+            android:textSize="14sp"
+            android:background="#152640"/>
+
+        <TextView
+            android:id="@+id/min10"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_margin="3dp"
+            android:gravity="center"
+            android:text="10"
+            android:textColor="#F5F9FF"
+            android:textSize="14sp"
+            android:background="#152640"/>
+
+        <TextView
+            android:id="@+id/min15"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_margin="3dp"
+            android:gravity="center"
+            android:text="15"
+            android:textColor="#F5F9FF"
+            android:textSize="14sp"
+            android:background="#152640"/>
+
+    </LinearLayout>
+
+
+    <!-- Старт -->
+
+    <Button
+        android:id="@+id/startButton"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginTop="10dp"
+        android:text="СТАРТ"
+        android:textColor="#FFFFFF"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        android:backgroundTint="#6655DD"/>
+
+
+    <!-- Пауза / стоп -->
+
+    <LinearLayout
+        android:id="@+id/controlRow"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/pauseButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="ПАУЗА"/>
+
+        <Button
+            android:id="@+id/stopButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="СТОП"/>
+
+    </LinearLayout>
+
+
+    <!-- Нижнее меню -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/navHome"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="⌂&#10;Главная"
+            android:textColor="#55B7FF"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/navExercises"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="◉&#10;Упражнения"
+            android:textColor="#91A6C0"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/navSettings"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="⚙&#10;Настройки"
+            android:textColor="#91A6C0"
+            android:textSize="12sp"/>
+
+    </LinearLayout>
+
+</LinearLayout>
