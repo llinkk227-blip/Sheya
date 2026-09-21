@@ -3,304 +3,220 @@ package com.example.sheya5;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.RectF;
+import android.graphics.Path;
+import android.util.AttributeSet;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 
 public class PersonView extends View {
 
     private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private String pose = "";
 
-    private float headAngle = 0f;
-    private float targetAngle = 0f;
-    private float shoulderOffset = 0f;
-    private float breathing = 0f;
-
-    private ValueAnimator poseAnimator;
+    private float breath = 0f;
     private ValueAnimator breathingAnimator;
 
     public PersonView(Context context) {
         super(context);
+        init();
+    }
 
+    public PersonView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
+
+    public PersonView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init();
+    }
+
+    private void init() {
         paint.setStrokeCap(Paint.Cap.ROUND);
         paint.setStrokeJoin(Paint.Join.ROUND);
 
         startBreathing();
     }
 
-    public void setPose(String pose) {
-
-        float newAngle = 0f;
-        float newShoulders = 0f;
-
-        switch (pose) {
-
-            case "right":
-                newAngle = 18f;
-                break;
-
-            case "left":
-                newAngle = -18f;
-                break;
-
-            case "tiltRight":
-                newAngle = 14f;
-                break;
-
-            case "tiltLeft":
-                newAngle = -14f;
-                break;
-
-            case "down":
-                newAngle = 10f;
-                break;
-
-            case "up":
-                newAngle = -7f;
-                break;
-
-            case "shoulders":
-                newShoulders = -15f;
-                break;
-
-            case "back":
-                newShoulders = 10f;
-                break;
-
-            case "scapula":
-                newShoulders = 6f;
-                break;
-
-            case "relax":
-                newShoulders = 0f;
-                break;
-        }
-
-        animatePose(newAngle, newShoulders);
-    }
-
-    private void animatePose(
-            float newAngle,
-            float newShoulders
-    ) {
-
-        if (poseAnimator != null) {
-            poseAnimator.cancel();
-        }
-
-        final float startAngle = headAngle;
-        final float startShoulders = shoulderOffset;
-
-        targetAngle = newAngle;
-
-        poseAnimator = ValueAnimator.ofFloat(0f, 1f);
-
-        poseAnimator.setDuration(650);
-        poseAnimator.setInterpolator(
-                new AccelerateDecelerateInterpolator()
-        );
-
-        poseAnimator.addUpdateListener(animation -> {
-
-            float value = (float) animation.getAnimatedValue();
-
-            headAngle =
-                    startAngle
-                            + (newAngle - startAngle) * value;
-
-            shoulderOffset =
-                    startShoulders
-                            + (newShoulders - startShoulders) * value;
-
-            invalidate();
-        });
-
-        poseAnimator.start();
-    }
-
     private void startBreathing() {
-
-        breathingAnimator =
-                ValueAnimator.ofFloat(-2f, 2f);
-
-        breathingAnimator.setDuration(2200);
-        breathingAnimator.setRepeatMode(
-                ValueAnimator.REVERSE
-        );
-        breathingAnimator.setRepeatCount(
-                ValueAnimator.INFINITE
-        );
+        breathingAnimator = ValueAnimator.ofFloat(0f, 1f);
+        breathingAnimator.setDuration(3000);
+        breathingAnimator.setRepeatCount(ValueAnimator.INFINITE);
+        breathingAnimator.setRepeatMode(ValueAnimator.REVERSE);
+        breathingAnimator.setInterpolator(new LinearInterpolator());
 
         breathingAnimator.addUpdateListener(animation -> {
-
-            breathing =
-                    (float) animation.getAnimatedValue();
-
+            breath = (float) animation.getAnimatedValue();
             invalidate();
         });
 
         breathingAnimator.start();
     }
 
+    public void setPose(String newPose) {
+        pose = newPose == null ? "" : newPose;
+        invalidate();
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
-
         super.onDraw(canvas);
 
-        float width = getWidth();
-        float height = getHeight();
+        float w = getWidth();
+        float h = getHeight();
 
-        float cx = width / 2f;
+        float cx = w / 2f;
+        float headY = h * 0.25f;
 
-        float bodyTop = height * 0.32f;
-        float shoulderY = bodyTop + 80f + breathing;
-        float bodyBottom = height * 0.76f;
+        // Небольшое движение при дыхании
+        float breathingOffset = breath * 4f;
 
-        // мягкое свечение за человеком
+        // Настройки персонажа
         paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.rgb(24, 54, 86));
+        paint.setStrokeWidth(10f);
 
-        canvas.drawCircle(
-                cx,
-                height * 0.43f,
-                Math.min(width, height) * 0.31f,
-                paint
-        );
-
-        // тело
-        paint.setColor(Color.rgb(77, 166, 255));
+        // Голова
         paint.setStyle(Paint.Style.FILL);
+        canvas.drawCircle(cx, headY + breathingOffset, 42f, paint);
 
-        RectF body = new RectF(
-                cx - 68,
-                shoulderY,
-                cx + 68,
-                bodyBottom
-        );
-
-        canvas.drawRoundRect(
-                body,
-                35,
-                35,
-                paint
-        );
-
-        // шея
-        paint.setColor(Color.rgb(236, 190, 155));
-
-        canvas.drawRoundRect(
-                new RectF(
-                        cx - 24,
-                        shoulderY - 50,
-                        cx + 24,
-                        shoulderY + 12
-                ),
-                18,
-                18,
-                paint
-        );
-
-        // голова
-        canvas.save();
-
-        canvas.rotate(
-                headAngle,
-                cx,
-                shoulderY - 78
-        );
-
-        paint.setColor(Color.rgb(242, 199, 165));
-
-        canvas.drawCircle(
-                cx,
-                shoulderY - 92,
-                55,
-                paint
-        );
-
-        // волосы
-        paint.setColor(Color.rgb(47, 55, 72));
-
-        canvas.drawOval(
-                new RectF(
-                        cx - 58,
-                        shoulderY - 148,
-                        cx + 58,
-                        shoulderY - 92
-                ),
-                paint
-        );
-
-        // лицо
-        paint.setColor(Color.rgb(40, 50, 65));
-
-        canvas.drawCircle(
-                cx - 20,
-                shoulderY - 92,
-                4,
-                paint
-        );
-
-        canvas.drawCircle(
-                cx + 20,
-                shoulderY - 92,
-                4,
-                paint
-        );
-
-        canvas.restore();
-
-        // плечи и руки
+        // Шея
+        paint.setStrokeWidth(18f);
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(25);
-        paint.setColor(Color.rgb(77, 166, 255));
-
         canvas.drawLine(
-                cx - 48,
-                shoulderY + 10,
-                cx - 105,
-                shoulderY + 75 + shoulderOffset,
-                paint
-        );
-
-        canvas.drawLine(
-                cx + 48,
-                shoulderY + 10,
-                cx + 105,
-                shoulderY + 75 + shoulderOffset,
-                paint
-        );
-
-        // кисти
-        paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.rgb(236, 190, 155));
-
-        canvas.drawCircle(
-                cx - 105,
-                shoulderY + 75 + shoulderOffset,
-                14,
-                paint
-        );
-
-        canvas.drawCircle(
-                cx + 105,
-                shoulderY + 75 + shoulderOffset,
-                14,
-                paint
-        );
-
-        // маленькая подсказка
-        paint.setColor(Color.rgb(145, 166, 192));
-        paint.setTextAlign(Paint.Align.CENTER);
-        paint.setTextSize(17);
-
-        canvas.drawText(
-                "Двигайтесь мягко",
                 cx,
-                height - 32,
+                headY + 35f,
+                cx,
+                headY + 75f + breathingOffset,
                 paint
         );
+
+        // Тело
+        paint.setStrokeWidth(24f);
+        canvas.drawLine(
+                cx,
+                headY + 75f + breathingOffset,
+                cx,
+                h * 0.65f,
+                paint
+        );
+
+        // Руки
+        paint.setStrokeWidth(18f);
+
+        float shoulderY = headY + 100f + breathingOffset;
+
+        if ("shoulders".equals(pose)) {
+            shoulderY -= 20f;
+        }
+
+        canvas.drawLine(
+                cx,
+                shoulderY,
+                cx - 90f,
+                shoulderY + 70f,
+                paint
+        );
+
+        canvas.drawLine(
+                cx,
+                shoulderY,
+                cx + 90f,
+                shoulderY + 70f,
+                paint
+        );
+
+        // Ноги
+        paint.setStrokeWidth(20f);
+
+        canvas.drawLine(
+                cx,
+                h * 0.65f,
+                cx - 60f,
+                h * 0.88f,
+                paint
+        );
+
+        canvas.drawLine(
+                cx,
+                h * 0.65f,
+                cx + 60f,
+                h * 0.88f,
+                paint
+        );
+
+        // Направление движения головы
+        drawHeadDirection(canvas, cx, headY + breathingOffset);
+    }
+
+    private void drawHeadDirection(Canvas canvas, float cx, float cy) {
+
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(8f);
+
+        if ("right".equals(pose)) {
+            drawArrow(canvas, cx + 45f, cy - 5f, cx + 95f, cy - 5f);
+        }
+
+        if ("left".equals(pose)) {
+            drawArrow(canvas, cx - 45f, cy - 5f, cx - 95f, cy - 5f);
+        }
+
+        if ("tiltRight".equals(pose)) {
+            drawArrow(canvas, cx + 45f, cy + 5f, cx + 80f, cy + 40f);
+        }
+
+        if ("tiltLeft".equals(pose)) {
+            drawArrow(canvas, cx - 45f, cy + 5f, cx - 80f, cy + 40f);
+        }
+
+        if ("down".equals(pose)) {
+            drawArrow(canvas, cx, cy + 45f, cx, cy + 90f);
+        }
+
+        if ("up".equals(pose)) {
+            drawArrow(canvas, cx, cy - 45f, cx, cy - 90f);
+        }
+    }
+
+    private void drawArrow(
+            Canvas canvas,
+            float x1,
+            float y1,
+            float x2,
+            float y2
+    ) {
+        canvas.drawLine(x1, y1, x2, y2, paint);
+
+        float angle = (float) Math.atan2(y2 - y1, x2 - x1);
+
+        float size = 18f;
+
+        Path path = new Path();
+
+        path.moveTo(x2, y2);
+
+        path.lineTo(
+                x2 - size * (float) Math.cos(angle - Math.PI / 6),
+                y2 - size * (float) Math.sin(angle - Math.PI / 6)
+        );
+
+        path.moveTo(x2, y2);
+
+        path.lineTo(
+                x2 - size * (float) Math.cos(angle + Math.PI / 6),
+                y2 - size * (float) Math.sin(angle + Math.PI / 6)
+        );
+
+        canvas.drawPath(path, paint);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        if (breathingAnimator != null) {
+            breathingAnimator.cancel();
+        }
+
+        super.onDetachedFromWindow();
     }
 }
